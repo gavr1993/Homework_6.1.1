@@ -1,27 +1,28 @@
 package com.example.homework_611;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MainActivity extends AppCompatActivity {
-    TextView textView = findViewById(R.id.textView);
-    Bundle bundle;
-    boolean isBundleNull;
+
+    private TextView textView;
+    private static final String TEXT_VIEW_BUNDLE_KEY = "String from textView: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        isBundleNull = bundle.get("String from textView: ") == null;
-        textView.setText(bundle.getCharSequence("String from textView: "));
-        isBundleNull = bundle.get("String from textView: ") == null;
+        textView = findViewById(R.id.textView);
+        boolean isBundleNull = savedInstanceState == null;
         Log.d("Lifecycle", "onCreate" + "bundle is null = " + isBundleNull);
+        if (!isBundleNull) {
+            textView.setText(savedInstanceState.getString(TEXT_VIEW_BUNDLE_KEY));
+        }
         textView.append("\n" + "onCreate, " + "bundle is null = " + isBundleNull);
     }
 
@@ -95,8 +96,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         Log.d("Lifecycle", "onSaveInstanceState");
         textView.append("\n" + "onSaveInstanceState");
-        bundle = new Bundle();
-        bundle.putString("String from textView: ", textView.getText().toString());
+        outState.putString(TEXT_VIEW_BUNDLE_KEY, textView.getText().toString());
     }
 
     @Override
